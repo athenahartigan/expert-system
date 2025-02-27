@@ -4,18 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Expert System</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+    />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="container">
       <form id="applicant-form">
-        <h1>Do You Have:</h1>
+        <h1 id="question">Do You Have:</h1>
         <div id="questions-container"></div>
-        <div class="button-container">
-          <button type="button" id="back-button" onclick="prevQuestion()">
-            Back
-          </button>
-        </div>
       </form>
       <div id="result" class="result"></div>
     </div>

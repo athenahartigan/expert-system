@@ -1,40 +1,45 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Roboto", sans-serif;
   margin: 0;
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: rgb(216, 239, 247);
+  background-color: #f0f4f8;
 }
 
 .container {
   background: white;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  max-width: 500px;
+  max-width: 600px;
   width: 100%;
+  text-align: center;
 }
 
 h1 {
-  text-align: center;
+  font-size: 24px;
   margin-bottom: 20px;
+  color: #333;
 }
 
 #questions-container .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 #questions-container .form-group label {
   display: block;
   font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #555;
 }
 
 .yes-no-group {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   margin-top: 10px;
 }
 
@@ -42,6 +47,7 @@ h1 {
   display: flex;
   align-items: center;
   font-weight: normal;
+  margin: 0 10px;
 }
 
 .yes-no-group input {
@@ -50,13 +56,11 @@ h1 {
 
 .yes-no-group label {
   padding: 10px 20px;
-  background-color: navy;
+  background-color: #007bff;
   color: white;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin: 0 5px;
-  text-align: center;
 }
 
 .yes-no-group input:checked + label {
@@ -65,20 +69,19 @@ h1 {
 
 .button-container {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   margin-top: 20px;
 }
 
 button {
-  padding: 10px;
-  background-color: navy;
+  padding: 10px 20px;
+  background-color: #007bff;
   border: none;
   color: white;
   font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
-  flex: 1;
-  margin: 0 5px;
+  transition: background-color 0.3s;
 }
 
 button:hover {
@@ -86,6 +89,20 @@ button:hover {
 }
 
 .result {
-  margin-top: 20px;
+  margin-top: 30px;
   font-size: 18px;
+  color: #333;
+}
+
+.result p {
+  font-weight: bold;
+}
+
+.result ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.result li {
+  margin-bottom: 10px;
 }

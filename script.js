@@ -77,6 +77,7 @@ const questions = [
 ];
 
 let currentQuestionIndex = 0;
+const applicantInfo = {};
 
 function displayQuestion(index) {
   const container = document.getElementById("questions-container");
@@ -99,7 +100,10 @@ function displayQuestion(index) {
   yesInput.name = question.id;
   yesInput.value = "yes";
   yesInput.id = question.id + "-yes";
-  yesInput.onclick = nextQuestion;
+  yesInput.onclick = () => {
+    applicantInfo[question.text] = true;
+    nextQuestion();
+  };
 
   const noLabel = document.createElement("label");
   noLabel.innerText = "No";
@@ -108,7 +112,10 @@ function displayQuestion(index) {
   noInput.name = question.id;
   noInput.value = "no";
   noInput.id = question.id + "-no";
-  noInput.onclick = nextQuestion;
+  noInput.onclick = () => {
+    applicantInfo[question.text] = false;
+    nextQuestion();
+  };
 
   yesLabel.setAttribute("for", yesInput.id);
   noLabel.setAttribute("for", noInput.id);
@@ -121,6 +128,19 @@ function displayQuestion(index) {
   formGroup.appendChild(label);
   formGroup.appendChild(yesNoGroup);
   container.appendChild(formGroup);
+
+  // Add navigation buttons
+  const buttonContainer = document.createElement("div");
+  buttonContainer.className = "button-container";
+
+  if (currentQuestionIndex > 0) {
+    const backButton = document.createElement("button");
+    backButton.innerText = "Back";
+    backButton.onclick = prevQuestion;
+    buttonContainer.appendChild(backButton);
+  }
+
+  container.appendChild(buttonContainer);
 }
 
 function nextQuestion() {
@@ -136,11 +156,15 @@ function prevQuestion() {
   if (currentQuestionIndex > 0) {
     currentQuestionIndex--;
     displayQuestion(currentQuestionIndex);
+  } else {
+    // If navigating back from the results page
+    document.getElementById("result").innerHTML = "";
+    document.getElementById("questions-container").style.display = "block";
+    displayQuestion(currentQuestionIndex);
   }
 }
 
 function evaluateApplicant() {
-  const applicantInfo = {};
   questions.forEach((question) => {
     const selectedOption = document.querySelector(
       `input[name="${question.id}"]:checked`
@@ -177,39 +201,80 @@ function evaluateApplicant() {
 }
 
 function displayResult(qualifiedPositions) {
+  // Hide the questions container
+  const container = document.getElementById("questions-container");
+  container.style.display = "none";
+
+  const question = document.getElementById("question");
+  question.style.display = "none";
+
+  // Display the results
   const resultDiv = document.getElementById("result");
   resultDiv.innerHTML = "";
 
   if (qualifiedPositions.length > 0) {
     resultDiv.innerHTML = `
-          <p>Congratulations! You are qualified for the following positions:</p>
-          <ul>
-            ${qualifiedPositions
-              .map(
-                (position) => `
-              <li>${position.name}
-                ${
-                  position.bonusSkills.length > 0
-                    ? `
-                  <ul>
-                    <li>Bonus you also have:</li>
-                    ${position.bonusSkills
-                      .map((skill) => `<li>${skill}</li>`)
-                      .join("")}
-                  </ul>`
-                    : ""
-                }
-              </li>
-            `
-              )
-              .join("")}
-          </ul>
-        `;
+        <H1>Congratulations!</H1>
+        <H4>You are qualified for the following positions:</H4>
+        <ul>
+          ${qualifiedPositions
+            .map(
+              (position) => `
+            <li>${position.name}
+              ${
+                position.bonusSkills.length > 0
+                  ? `
+                <ul>
+                  <li>Bonus you also have:</li>
+                  ${position.bonusSkills
+                    .map((skill) => `<li>${skill}</li>`)
+                    .join("")}
+                </ul>`
+                  : ""
+              }
+            </li>
+          `
+            )
+            .join("")}
+        </ul>
+      `;
   } else {
     resultDiv.innerHTML = `
-          <p>Unfortunately, you do not meet the required qualifications for any available positions.</p>
-        `;
+        <p>Unfortunately, you do not meet the required qualifications for any available positions.</p>
+      `;
   }
+
+  // Add navigation buttons
+  const buttonContainer = document.createElement("div");
+  buttonContainer.className = "button-container";
+
+  const backButton = document.createElement("button");
+  backButton.innerText = "Back";
+  backButton.onclick = () => {
+    document.getElementById("questions-container").style.display = "block";
+    document.getElementById("question").style.display = "block";
+    document.getElementById("result").innerHTML = "";
+    currentQuestionIndex = questions.length - 1;
+    displayQuestion(currentQuestionIndex);
+  };
+  buttonContainer.appendChild(backButton);
+
+  const restartButton = document.createElement("button");
+  restartButton.innerText = "Restart";
+  restartButton.onclick = restart;
+  buttonContainer.appendChild(restartButton);
+
+  resultDiv.appendChild(buttonContainer);
+}
+
+function restart() {
+  currentQuestionIndex = 0;
+  for (let key in applicantInfo) {
+    delete applicantInfo[key];
+  }
+  document.getElementById("questions-container").style.display = "block";
+  document.getElementById("result").innerHTML = "";
+  displayQuestion(currentQuestionIndex);
 }
 
 // Initialize the first question
