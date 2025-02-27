@@ -1,61 +1,91 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f4f4f4;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgb(216, 239, 247);
 }
 
 .container {
-    background: white;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    max-width: 500px;
-    width: 100%;
+  background: white;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  max-width: 500px;
+  width: 100%;
 }
 
 h1 {
-    text-align: center;
-    margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.form-group {
-    margin-bottom: 15px;
+#questions-container .form-group {
+  margin-bottom: 15px;
 }
 
-.form-group label {
-    display: block;
-    font-weight: bold;
+#questions-container .form-group label {
+  display: block;
+  font-weight: bold;
 }
 
-input[type="number"] {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.yes-no-group {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.yes-no-group label {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+}
+
+.yes-no-group input {
+  display: none;
+}
+
+.yes-no-group label {
+  padding: 10px 20px;
+  background-color: navy;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 0 5px;
+  text-align: center;
+}
+
+.yes-no-group input:checked + label {
+  background-color: #0056b3;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 20px;
 }
 
 button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007BFF;
-    border: none;
-    color: white;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
+  padding: 10px;
+  background-color: navy;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  flex: 1;
+  margin: 0 5px;
 }
 
 button:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 .result {
-    margin-top: 20px;
-    font-size: 18px;
+  margin-top: 20px;
+  font-size: 18px;
 }
