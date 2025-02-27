@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Applicant Information</h1>
+        <form id="applicant-form">
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="python-course" name="Python course work">
+                    Python course work
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="software-engineering" name="Software Engineering course work">
+                    Software Engineering course work
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="agile-course" name="Agile course">
+                    Agile course
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="bachelor-cs" name="Bachelor in CS">
+                    Bachelor in CS
+                </label>
+            </div>
+            <div class="form-group">
+                <label>3 years Python development
+                    <input type="number" id="python-development" name="3 years Python development" min="0">
+                </label>
+            </div>
+            <div class="form-group">
+                <label>1 year data development
+                    <input type="number" id="data-development" name="1 year data development" min="0">
+                </label>
+            </div>
+            <div class="form-group">
+                <label>Experience in Agile projects
+                    <input type="number" id="agile-projects" name="Experience in Agile projects" min="0">
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="used-git" name="Used Git">
+                    Used Git
+                </label>
+            </div>
+            <div class="form-group">
+                <label>3 years managing software projects
+                    <input type="number" id="managing-projects" name="3 years managing software projects" min="0">
+                </label>
+            </div>
+            <div class="form-group">
+                <label>2 years in Agile projects
+                    <input type="number" id="agile-experience" name="2 years in Agile projects" min="0">
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="pmi-certification" name="PMI Lean Project Management Certification">
+                    PMI Lean Project Management Certification
+                </label>
+            </div>
+            <div class="form-group">
+                <label>3 years using Python to develop Expert Systems
+                    <input type="number" id="expert-systems" name="3 years using Python to develop Expert Systems" min="0">
+                </label>
+            </div>
+            <div class="form-group">
+                <label>2 years data architecture and development
+                    <input type="number" id="data-architecture" name="2 years data architecture and development" min="0">
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="masters-cs" name="Masters in CS">
+                    Masters in CS
+                </label>
+            </div>
+            <button type="button" onclick="evaluateApplicant()">Submit</button>
+        </form>
+        <div id="result" class="result"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
