@@ -152,21 +152,12 @@ function evaluateApplicant() {
 
   const qualifiedPositions = positions
     .map((position) => {
-      // Variable to check needed skills and qualifications
-      let meetsNeededSkills = true;
-      let meetsQualifications = true;
-
-      position.neededSkills.forEach((skill) => {
-        if (applicantInfo[skill] !== true) {
-          meetsNeededSkills = false;
-        }
-      });
-
-      position.qualifications.forEach((qualification) => {
-        if (applicantInfo[qualification] !== true) {
-          meetsQualifications = false;
-        }
-      });
+      const meetsNeededSkills = position.neededSkills.every(
+        (skill) => applicantInfo[skill] === true
+      );
+      const meetsQualifications = position.qualifications.every(
+        (qualification) => applicantInfo[qualification] === true
+      );
 
       if (meetsNeededSkills && meetsQualifications) {
         const bonusSkills = position.desiredSkills.filter(
@@ -191,33 +182,33 @@ function displayResult(qualifiedPositions) {
 
   if (qualifiedPositions.length > 0) {
     resultDiv.innerHTML = `
-        <p>Congratulations! You are qualified for the following positions:</p>
-        <ul>
-          ${qualifiedPositions
-            .map(
-              (position) => `
-            <li>${position.name}
-              ${
-                position.bonusSkills.length > 0
-                  ? `
-                <ul>
-                  <li>Bonus you also have:</li>
-                  ${position.bonusSkills
-                    .map((skill) => `<li>${skill}</li>`)
-                    .join("")}
-                </ul>`
-                  : ""
-              }
-            </li>
-          `
-            )
-            .join("")}
-        </ul>
-      `;
+          <p>Congratulations! You are qualified for the following positions:</p>
+          <ul>
+            ${qualifiedPositions
+              .map(
+                (position) => `
+              <li>${position.name}
+                ${
+                  position.bonusSkills.length > 0
+                    ? `
+                  <ul>
+                    <li>Bonus you also have:</li>
+                    ${position.bonusSkills
+                      .map((skill) => `<li>${skill}</li>`)
+                      .join("")}
+                  </ul>`
+                    : ""
+                }
+              </li>
+            `
+              )
+              .join("")}
+          </ul>
+        `;
   } else {
     resultDiv.innerHTML = `
-        <p>Unfortunately, you do not meet the required qualifications for any available positions.</p>
-      `;
+          <p>Unfortunately, you do not meet the required qualifications for any available positions.</p>
+        `;
   }
 }
 
