@@ -64,7 +64,7 @@ h1 {
 
 .yes-no-group label {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #20609c;
   color: white;
   border-radius: 5px;
   cursor: pointer;
@@ -83,7 +83,7 @@ h1 {
 
 button {
   padding: 10px 20px;
-  background-color: rgb(0, 0, 69);
+  background-color: #252a80;
   border: none;
   color: white;
   font-size: 16px;
