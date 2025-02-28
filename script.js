@@ -104,7 +104,11 @@ function displayQuestion(index) {
     applicantInfo[question.text] = true;
     yesLabel.classList.add("selected");
     noLabel.classList.remove("selected");
-    setTimeout(nextQuestion, 100); // Short delay to show color change
+    if (currentQuestionIndex === questions.length - 1) {
+      displayFinishButton();
+    } else {
+      setTimeout(nextQuestion, 100);
+    }
   };
 
   const noLabel = document.createElement("label");
@@ -118,7 +122,11 @@ function displayQuestion(index) {
     applicantInfo[question.text] = false;
     noLabel.classList.add("selected");
     yesLabel.classList.remove("selected");
-    setTimeout(nextQuestion, 100); // Short delay to show color change
+    if (currentQuestionIndex === questions.length - 1) {
+      displayFinishButton();
+    } else {
+      setTimeout(nextQuestion, 100);
+    }
   };
 
   yesLabel.setAttribute("for", yesInput.id);
@@ -133,20 +141,53 @@ function displayQuestion(index) {
   formGroup.appendChild(yesNoGroup);
   container.appendChild(formGroup);
 
-  // Add navigation buttons
   const buttonContainer = document.createElement("div");
   buttonContainer.className = "button-container";
 
   if (currentQuestionIndex > 0) {
     const backButton = document.createElement("button");
+    backButton.id = "back-button";
     backButton.innerText = "Back";
+    backButton.classList.add("back-button");
     backButton.onclick = prevQuestion;
     buttonContainer.appendChild(backButton);
   }
 
+  if (
+    Object.keys(applicantInfo).length > currentQuestionIndex &&
+    currentQuestionIndex < questions.length - 1
+  ) {
+    const nextButton = document.createElement("button");
+    nextButton.id = "next-button";
+    nextButton.innerText = "Next";
+    nextButton.classList.add("next-button");
+    nextButton.onclick = nextQuestion;
+    buttonContainer.appendChild(nextButton);
+  }
+
+  if (
+    Object.keys(applicantInfo).length > currentQuestionIndex &&
+    Object.keys(applicantInfo).length === questions.length
+  ) {
+    const finishButton = document.createElement("button");
+    finishButton.id = "finish-button";
+    finishButton.innerText = "Finish";
+    finishButton.classList.add("finish-button");
+    finishButton.onclick = evaluateApplicant;
+
+    if (currentQuestionIndex === 0) {
+      finishButton.classList.add("finish-button-left");
+      buttonContainer.appendChild(finishButton);
+    } else if (currentQuestionIndex === questions.length - 1) {
+      finishButton.classList.add("finish-button-right");
+      buttonContainer.appendChild(finishButton);
+    } else {
+      buttonContainer.appendChild(finishButton);
+    }
+  }
+
   container.appendChild(buttonContainer);
 
-  // Restore the previously selected answer
   if (applicantInfo[question.text] === true) {
     yesInput.checked = true;
     yesLabel.classList.add("selected");
@@ -154,14 +195,39 @@ function displayQuestion(index) {
     noInput.checked = true;
     noLabel.classList.add("selected");
   }
+
+  if (
+    currentQuestionIndex === questions.length - 1 &&
+    applicantInfo[questions[questions.length - 1].text] !== undefined
+  ) {
+    displayFinishButton();
+  }
+}
+
+function displayFinishButton() {
+  const container = document.getElementById("questions-container");
+  let buttonContainer = container.querySelector(".button-container");
+
+  if (!buttonContainer.querySelector("#finish-button")) {
+    const finishButton = document.createElement("button");
+    finishButton.id = "finish-button";
+    finishButton.innerText = "Finish";
+    finishButton.onclick = evaluateApplicant;
+    finishButton.classList.add("finish-button");
+
+    if (currentQuestionIndex === 0) {
+      finishButton.classList.add("finish-button-left");
+    } else if (currentQuestionIndex === questions.length - 1) {
+      finishButton.classList.add("finish-button-right");
+    }
+    buttonContainer.appendChild(finishButton);
+  }
 }
 
 function nextQuestion() {
   if (currentQuestionIndex < questions.length - 1) {
     currentQuestionIndex++;
     displayQuestion(currentQuestionIndex);
-  } else {
-    evaluateApplicant();
   }
 }
 
@@ -170,7 +236,6 @@ function prevQuestion() {
     currentQuestionIndex--;
     displayQuestion(currentQuestionIndex);
   } else {
-    // If navigating back from the results page
     document.getElementById("result").innerHTML = "";
     document.getElementById("questions-container").style.display = "block";
     document.getElementById("question").style.display = "block";
@@ -187,6 +252,9 @@ function evaluateApplicant() {
       applicantInfo[question.text] = selectedOption.value === "yes";
     }
   });
+
+  document.getElementById("questions-container").style.display = "none";
+  document.getElementById("question").style.display = "none";
 
   const qualifiedPositions = positions
     .map((position) => {
@@ -215,50 +283,41 @@ function evaluateApplicant() {
 }
 
 function displayResult(qualifiedPositions) {
-  // Hide the questions container
-  const container = document.getElementById("questions-container");
-  container.style.display = "none";
-
-  const question = document.getElementById("question");
-  question.style.display = "none";
-
-  // Display the results
   const resultDiv = document.getElementById("result");
   resultDiv.innerHTML = "";
 
   if (qualifiedPositions.length > 0) {
     resultDiv.innerHTML = `
-        <H1>Congratulations!</H1>
-        <H4>You are qualified for the following positions:</H4>
-        <ul>
-          ${qualifiedPositions
-            .map(
-              (position) => `
-            <li>${position.name}
-              ${
-                position.bonusSkills.length > 0
-                  ? `
-                <ul>
-                  <li>Bonus you also have:</li>
-                  ${position.bonusSkills
-                    .map((skill) => `<li>${skill}</li>`)
-                    .join("")}
-                </ul>`
-                  : ""
-              }
-            </li>
-          `
-            )
-            .join("")}
-        </ul>
-      `;
+      <h1>Congratulations!</h1>
+      <h4>You are qualified for the following positions:</h4>
+      <ul>
+        ${qualifiedPositions
+          .map(
+            (position) => `
+              <li>${position.name}
+                ${
+                  position.bonusSkills.length > 0
+                    ? `
+                  <ul>
+                    <li>Bonus skills you also have:</li>
+                    ${position.bonusSkills
+                      .map((skill) => `<li>${skill}</li>`)
+                      .join("")}
+                  </ul>`
+                    : ""
+                }
+              </li>
+            `
+          )
+          .join("")}
+      </ul>
+    `;
   } else {
     resultDiv.innerHTML = `
-        <p>Unfortunately, you do not meet the required qualifications for any available positions.</p>
-      `;
+      <p>Unfortunately, you do not meet the required qualifications for any available positions.</p>
+    `;
   }
 
-  // Add navigation buttons
   const buttonContainer = document.createElement("div");
   buttonContainer.className = "button-container";
 
@@ -267,8 +326,7 @@ function displayResult(qualifiedPositions) {
   backButton.onclick = () => {
     document.getElementById("questions-container").style.display = "block";
     document.getElementById("question").style.display = "block";
-    document.getElementById("result").innerHTML = "";
-    currentQuestionIndex = questions.length - 1;
+    resultDiv.innerHTML = "";
     displayQuestion(currentQuestionIndex);
   };
   buttonContainer.appendChild(backButton);
@@ -287,9 +345,9 @@ function restart() {
     delete applicantInfo[key];
   }
   document.getElementById("questions-container").style.display = "block";
+  document.getElementById("question").style.display = "block";
   document.getElementById("result").innerHTML = "";
   displayQuestion(currentQuestionIndex);
 }
 
-// Initialize the first question
 displayQuestion(currentQuestionIndex);
