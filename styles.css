@@ -157,3 +157,14 @@ button:hover {
   position: absolute;
   left: 0;
 }
+.checkmark {
+  color: green;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.crossmark {
+  color: red;
+  font-weight: bold;
+  font-size: 20px;
+}

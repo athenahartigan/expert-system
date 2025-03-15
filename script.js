@@ -256,63 +256,160 @@ function evaluateApplicant() {
   document.getElementById("questions-container").style.display = "none";
   document.getElementById("question").style.display = "none";
 
-  const qualifiedPositions = positions
-    .map((position) => {
-      const meetsNeededSkills = position.neededSkills.every(
-        (skill) => applicantInfo[skill] === true
-      );
-      const meetsQualifications = position.qualifications.every(
-        (qualification) => applicantInfo[qualification] === true
-      );
+  const qualifiedPositions = [];
+  const disqualifiedPositions = [];
 
-      if (meetsNeededSkills && meetsQualifications) {
-        const bonusSkills = position.desiredSkills.filter(
-          (skill) => applicantInfo[skill] === true
-        );
-        return {
-          name: position.name,
-          bonusSkills: bonusSkills,
-        };
-      } else {
-        return null;
-      }
-    })
-    .filter((position) => position !== null);
+  positions.forEach((position) => {
+    const neededSkills = position.neededSkills.map((skill) => ({
+      skill: skill,
+      met: applicantInfo[skill] === true,
+    }));
+    const qualifications = position.qualifications.map((qualification) => ({
+      qualification: qualification,
+      met: applicantInfo[qualification] === true,
+    }));
+    const desiredSkills = position.desiredSkills.map((skill) => ({
+      skill: skill,
+      met: applicantInfo[skill] === true,
+    }));
 
-  displayResult(qualifiedPositions);
+    const meetsNeededSkills = neededSkills.every((item) => item.met);
+    const meetsQualifications = qualifications.every((item) => item.met);
+
+    if (meetsNeededSkills && meetsQualifications) {
+      qualifiedPositions.push({
+        name: position.name,
+        neededSkills: neededSkills,
+        qualifications: qualifications,
+        desiredSkills: desiredSkills,
+      });
+    } else {
+      disqualifiedPositions.push({
+        name: position.name,
+        neededSkills: neededSkills,
+        qualifications: qualifications,
+        desiredSkills: desiredSkills,
+      });
+    }
+  });
+
+  displayResult(qualifiedPositions, disqualifiedPositions);
 }
 
-function displayResult(qualifiedPositions) {
+function displayResult(qualifiedPositions, disqualifiedPositions) {
   const resultDiv = document.getElementById("result");
   resultDiv.innerHTML = "";
 
   if (qualifiedPositions.length > 0) {
-    resultDiv.innerHTML = `
+    resultDiv.innerHTML += `
       <h1>Congratulations!</h1>
       <h4>You are qualified for the following positions:</h4>
       <ul>
         ${qualifiedPositions
           .map(
             (position) => `
-              <li>${position.name}
-                ${
-                  position.bonusSkills.length > 0
-                    ? `
-                  <ul>
-                    <li>Bonus skills you also have:</li>
-                    ${position.bonusSkills
-                      .map((skill) => `<li>${skill}</li>`)
-                      .join("")}
-                  </ul>`
-                    : ""
-                }
-              </li>
-            `
+          <li>${position.name}
+            <ul>
+              <li>Needed Skills:</li>
+              ${position.neededSkills
+                .map(
+                  (item) => `
+                <li><span class="${item.met ? "checkmark" : "crossmark"}">${
+                    item.met ? "✓" : "✗"
+                  }</span> ${item.skill}</li>
+              `
+                )
+                .join("")}
+              <li>Qualifications:</li>
+              ${position.qualifications
+                .map(
+                  (item) => `
+                <li><span class="${item.met ? "checkmark" : "crossmark"}">${
+                    item.met ? "✓" : "✗"
+                  }</span> ${item.qualification}</li>
+              `
+                )
+                .join("")}
+              ${
+                position.desiredSkills.length > 0
+                  ? `
+                <li>Desired Skills:</li>
+                ${position.desiredSkills
+                  .map(
+                    (item) => `
+                  <li><span class="${item.met ? "checkmark" : "crossmark"}">${
+                      item.met ? "✓" : "✗"
+                    }</span> ${item.skill}</li>
+                `
+                  )
+                  .join("")}
+              `
+                  : ""
+              }
+            </ul>
+          </li>
+        `
           )
           .join("")}
       </ul>
     `;
-  } else {
+  }
+
+  if (disqualifiedPositions.length > 0) {
+    resultDiv.innerHTML += `
+      <h4>Unfortunately You Didn't Qualify For:</h4>
+      <ul>
+        ${disqualifiedPositions
+          .map(
+            (position) => `
+          <li>${position.name}
+            <ul>
+              <li>Needed Skills:</li>
+              ${position.neededSkills
+                .map(
+                  (item) => `
+                <li><span class="${item.met ? "checkmark" : "crossmark"}">${
+                    item.met ? "✓" : "✗"
+                  }</span> ${item.skill}</li>
+              `
+                )
+                .join("")}
+              <li>Qualifications:</li>
+              ${position.qualifications
+                .map(
+                  (item) => `
+                <li><span class="${item.met ? "checkmark" : "crossmark"}">${
+                    item.met ? "✓" : "✗"
+                  }</span> ${item.qualification}</li>
+              `
+                )
+                .join("")}
+              ${
+                position.desiredSkills.length > 0
+                  ? `
+                <li>Desired Skills:</li>
+                ${position.desiredSkills
+                  .map(
+                    (item) => `
+                  <li><span class="${item.met ? "checkmark" : "crossmark"}">${
+                      item.met ? "✓" : "✗"
+                    }</span> ${item.skill}</li>
+                `
+                  )
+                  .join("")}
+              `
+                  : ""
+              }
+            </ul>
+          </li>
+        `
+          )
+          .join("")}
+      </ul>
+    `;
+  }
+
+  if (qualifiedPositions.length === 0 && disqualifiedPositions.length === 0) {
     resultDiv.innerHTML = `
       <p>Unfortunately, you do not meet the required qualifications for any available positions.</p>
     `;
